@@ -70,6 +70,10 @@ images_ext = { "jpg", "jpeg", "JPEG", "JPG", "PNG", "png", "bmp", "BMP" }
 -- table of possible patterns for the cover filename
 coverpatterns = { '.*[Ff]ront.*', '.*[Ff]older.*', '.*[Aa]lbumart.*', '.*[Cc]over.*', '.*[Tt]humb.*' }
 m = connection()
+if not m then
+	-- exit if no connection has been possible to the server
+	return
+end
 info = m:status()
 last_status = info['state']
 currentsong = m:currentsong()
