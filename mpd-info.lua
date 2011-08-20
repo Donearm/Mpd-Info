@@ -1,15 +1,17 @@
 #!/usr/bin/env lua
 
--- Copyright 2011 Gianluca Fiore © <forod.g@gmail.com>
---
--- Print song information of the currently playing one in MPD and search 
+--- Print song information of the currently playing one in MPD and search 
 -- for a album cover in its directory. In pure Lua.
+-- @author Gianluca Fiore
+-- @copyright 2011 Gianluca Fiore <forod.g@gmail.com>
+
 
 local mpd = require("mpd")
 local lfs = require("lfs")
 local socket = require("socket")
 
--- Sleep function
+--- Sleep function
+-- @param n Number of seconds to sleep
 function sleep(n)
 	if n > 0 then
 --		os.execute("ping -n -c " .. tonumber(n+1) .. " localhost > NUL")
@@ -17,13 +19,13 @@ function sleep(n)
 	end
 end
 
--- connect/reconnect function
+--- Connect/Reconnect function to the mpd server.
 function connection()
 	local m = mpd.connect()
 	if m then return m end
 end
 
--- get mpd music directory
+--- Get path of the mpd music directory.
 function mpd_directory()
 	local f = '/etc/mpd.conf'
 	local file = io.input(f)
@@ -36,9 +38,10 @@ function mpd_directory()
 	end
 end
 
+--- Find the path to the cover album image of the current playing song.
+-- @param file The path of the song currently being played.
+-- @param album The name of the album.
 function coversearch(file, album)
-	-- search on the mpd collection path for a cover for the current 
-	-- playing song
 	local dir = string.gsub(file, '(.*)/.*', "%1")
 	local mpd_dir = mpd_directory()
 	for files in lfs.dir(mpd_dir .. '/' .. dir) do
