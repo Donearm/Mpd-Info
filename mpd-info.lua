@@ -19,9 +19,30 @@ function sleep(n)
 	end
 end
 
+local m_inst = mpd.MPD
+function mInstance(BaseClass)
+	local new_class = {}
+	local new_class_mt = { __index = new_class }
+
+	function new_class:create()
+		local newinst = {}
+		setmetatable( newinst, new_class_mt )
+		return newinst
+	end
+
+	if BaseClass then
+		setmetatable( new_class, { __index = BaseClass })
+	end
+
+	return new_clas
+end
+
 --- Connect/Reconnect function to the mpd server.
 function connection()
-	local m = mpd.connect()
+--	local m = mpd.connect()
+	local mpd_class = mInstance(m_inst)
+	local mpd_inst = mpd_class:create()
+	local m = mpd_inst:connect()
 	if m then return m end
 end
 
