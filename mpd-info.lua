@@ -73,16 +73,20 @@ images_ext = { "jpg", "jpeg", "JPEG", "JPG", "PNG", "png", "bmp", "BMP" }
 -- table of possible patterns for the cover filename
 coverpatterns = { '.*[Ff]ront.*', '.*[Ff]older.*', '.*[Aa]lbumart.*', '.*[Cc]over.*', '.*[Tt]humb.*' }
 m = connection()
+
+--- Check if we have a successful connection with MPD server or
+--otherwise exit.
 if not m then
+	print("MPD server not running or no connection has been possible")
 	-- exit if no connection has been possible to the server
 	return
 end
+
 info = m:status()
 last_status = info['state']
 currentsong = m:currentsong()
 last_song = currentsong['Title']
 last_id = currentsong['Id']
-
 
 trackn = currentsong['Track']  -- current song track number
 date = currentsong['Date']  -- year of current song
