@@ -1,0 +1,84 @@
+Mpd-info
+=======
+
+Outputs current MPD playing song info (artist, album and song) plus scan 
+the directory of the song for an album cover.
+
+Mpd-popup
+========
+
+Same thing as mpd-info but it's meant to be used together with awesomewm 
+naughty library for notification to output the info and the album cover 
+in a popup.
+
+**How to use it**
+
+Copy mpd-popup.lua in ~/.config/awesome/ or anywhere in Lua's path. Then 
+add to awesomewm's rc.lua:
+
+	require("mpd-popup")
+
+	local coverart_on
+	local base_id = 0
+	local m_connection
+	function coverart_show()
+		local id
+		local info
+		local cover_path
+
+		coverart_hide()
+
+		if m_connection ~= nil then
+			m_connection, id, info, cover_path = mpd_main(base_id, m_connection)
+		else
+			m_connection, id, info, cover_path = mpd_main(base_id)
+		end
+		if id == nil then
+			return
+		end
+		if base_id ~= id then
+			local img = image(cover_path)
+			local ico = img
+			local txt = info
+			coverart_on = naughty.notify({
+				icon = ico,
+				icon_size = 80,
+				text = txt,
+				timeout = 3,
+				position = "bottom_right",
+			})
+		base_id =d
+		end
+	end
+	
+	function coverart_hide()
+		if coverart_on ~= nil then
+			naughty.destroy(coverart_on)
+		end 
+	end
+
+Add a timer for the function to trigger itself (usually at the bottom 
+but can be everywhere):
+
+	mpdtimer = timer({ timeout = 2 })
+	mpdtimer:add_signal("timeout", function () coverart_show() end)
+	mpdtimer:start()
+
+Then every 2 seconds awesome will take care of triggering the function 
+and check if the playing song in Mpd has changed; if it has, a nice 
+naughty notification will appear with cover art and album, artist and 
+song name. It will look for an album art in the song directory with a 
+name containing "front" or "folder" or "albumart" or "cover" or, 
+finally, "thumb" (in this order). The first that matches will be the one 
+shown. If you don't see anything, be sure to have an image containing 
+one of these words in the name.
+
+Requirements
+===========
+
+* Lua-Mpd https://github.com/silentbicycle/lua-mpd
+
+License
+=======
+
+see COPYING
