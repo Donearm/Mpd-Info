@@ -3,7 +3,7 @@
 --- Popup with info about current playing song in mpd.
 -- To be loaded from awesomeWM's rc.lua
 -- @author Gianluca Fiore
--- @copyright Gianluca Fiore <forod.g@gmail.com>
+-- @copyright 2011-2012, Gianluca Fiore <forod.g@gmail.com>
 --
 -- Requires lua-mpd (https://github.com/silentbicycle/lua-mpd)
 -- and Lua FileSystem 
