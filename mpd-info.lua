@@ -3,7 +3,7 @@
 --- Print song information of the currently playing one in MPD and search 
 -- for a album cover in its directory. In pure Lua.
 -- @author Gianluca Fiore
--- @copyright 2011-2012, Gianluca Fiore <forod.g@gmail.com>
+-- @copyright 2011-2013, Gianluca Fiore <forod.g@gmail.com>
 
 
 local mpd = require("mpd")
