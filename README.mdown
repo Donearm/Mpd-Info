@@ -47,7 +47,7 @@ add to awesomewm's rc.lua:
 				timeout = 3,
 				position = "bottom_right",
 			})
-		base_id =d
+		base_id = id
 		end
 	end
 	
