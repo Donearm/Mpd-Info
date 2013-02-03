@@ -6,45 +6,18 @@
 -- @copyright 2011-2013, Gianluca Fiore <forod.g@gmail.com>
 
 
-local mpd = require("mpd")
 local lfs = require("lfs")
-local socket = require("socket")
+local mpdinfo = require("mpdinfo")
+local lsleep = require("sleep")
 
 --- Sleep function
--- @param n Number of seconds to sleep
-function sleep(n)
+--@param n number of seconds to sleep
+function secsleep(n)
 	if n > 0 then
---		os.execute("ping -n -c " .. tonumber(n+1) .. " localhost > NUL")
-		socket.select(nil, nil, n)
+		sleep(n)
 	end
 end
 
-local m_inst = mpd.MPD
-function mInstance(BaseClass)
-	local new_class = {}
-	local new_class_mt = { __index = new_class }
-
-	function new_class:create()
-		local newinst = {}
-		setmetatable( newinst, new_class_mt )
-		return newinst
-	end
-
-	if BaseClass then
-		setmetatable( new_class, { __index = BaseClass })
-	end
-
-	return new_clas
-end
-
---- Connect/Reconnect function to the mpd server.
-function connection()
---	local m = mpd.connect()
-	local mpd_class = mInstance(m_inst)
-	local mpd_inst = mpd_class:create()
-	local m = mpd_inst:connect()
-	if m then return m end
-end
 
 --- Get path of the mpd music directory.
 function mpd_directory()
@@ -93,66 +66,40 @@ end
 images_ext = { "jpg", "jpeg", "JPEG", "JPG", "PNG", "png", "bmp", "BMP" }
 -- table of possible patterns for the cover filename
 coverpatterns = { '.*[Ff]ront.*', '.*[Ff]older.*', '.*[Aa]lbumart.*', '.*[Cc]over.*', '.*[Tt]humb.*' }
-m = connection()
+
+
+-- load initial status info with mpdinfo c module
+local istate, iartist, ialbum, ititle, iid, ifile = showmpdinfo() 
 
 --- Check if we have a successful connection with MPD server or
 --otherwise exit.
-if not m then
+if not istate then
 	print("MPD server not running or no connection has been possible")
 	-- exit if no connection has been possible to the server
 	return
 end
 
-info = m:status()
-last_status = info['state']
-currentsong = m:currentsong()
-last_song = currentsong['Title']
-last_id = currentsong['Id']
-
-trackn = currentsong['Track']  -- current song track number
-date = currentsong['Date']  -- year of current song
-artist = currentsong['Artist']	-- current song artist
-album = currentsong['Album']  -- current song album
-id = currentsong['Id']  -- numeric id of current song (unique?)
-title = currentsong['Title']	-- title of current song
-file = currentsong['file']	-- path, relative to mpd music directory, of current song
-genre = currentsong['Genre'] -- genre of current song
-
 while true do
-	state = m:status()['state']
-	id = m:currentsong()['Id']
-	if state ~= last_state then
-		if state == "play" then
-			artist = m:currentsong()['Artist']
-			album = m:currentsong()['Album']
-			title = m:currentsong()['Title']
+	local state, artist, album, title, id, file = showmpdinfo() 
+	if state ~= istate then
+		if state == "playing" then
 			cover = coversearch(file, album)
 			np_string = string.format("Now Playing \nArtist:\t%s\nAlbum:\t%s\nSong:\t%s\n", artist, album, title)
 			print(np_string)
---			return np_string, cover
-		elseif state == "pause" then
-			artist = m:currentsong()['Artist']
-			album = m:currentsong()['Album']
-			title = m:currentsong()['Title']
+		elseif state == "paused" then
 			print("In pause")
 		else
 			print("No song playing")
 		end
-		last_state = m:status()['state']
+		istate = showmpdinfo()
 	end
 
-	if id ~= last_id then
-		artist = m:currentsong()['Artist']
-		album = m:currentsong()['Album']
-		title = m:currentsong()['Title']
-		last_id = id
+	if id ~= iid and state ~= "stopped" then
+		iid = id
 		print("Song changed")
 		cover = coversearch(file, album)
 		np_string = string.format("Now Playing \nArtist:\t%s\nAlbum:\t%s\nSong:\t%s\n", artist, album, title)
 		print(np_string)
---		return np_string, cover
 	end
-	sleep(2)
+	secsleep(2)
 end
-
---m:close()

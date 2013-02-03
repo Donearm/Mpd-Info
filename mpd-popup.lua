@@ -9,14 +9,16 @@
 -- and Lua FileSystem 
 -- (http://keplerproject.github.com/luafilesystem/index.html)
 
-local mpd = require("mpd")
 local lfs = require("lfs")
+local mpdinfo = require("mpdinfo")
+local lsleep = require("sleep")
 
-
---- Connect/Reconnect function to the mpd server.
-function connection()
-	local m = mpd.connect()
-	if m then return m end
+--- Sleep function
+--@param n number of seconds to sleep
+function secsleep(n)
+	if n > 0 then
+		sleep(n)
+	end
 end
 
 --- Get path of the mpd music directory.
@@ -71,6 +73,7 @@ coverpatterns = { '.*[Ff]ront.*', '.*[Ff]older.*', '.*[Aa]lbumart.*', '.*[Cc]ove
 -- played.
 -- @param m_connection A previous connection to the mpd server.
 function mpd_main(argid, m_connection)
+
 	if m_connection then
 		local m = m_connection
 	else
