@@ -1,9 +1,12 @@
 #!/usr/bin/env lua
 
 --- Print song information of the currently playing one in MPD and search 
--- for a album cover in its directory. In pure Lua.
+-- for a album cover in its directory.
 -- @author Gianluca Fiore
 -- @copyright 2011-2013, Gianluca Fiore <forod.g@gmail.com>
+--
+-- Requires Lua FileSystem
+-- (http://keplerproject.github.com/luafilesystem/index.html)
 
 
 local lfs = require("lfs")
