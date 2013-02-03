@@ -20,7 +20,6 @@ add to awesomewm's rc.lua:
 
 	local coverart_on
 	local base_id = 0
-	local m_connection
 	function coverart_show()
 		local id
 		local info
@@ -28,11 +27,8 @@ add to awesomewm's rc.lua:
 
 		coverart_hide()
 
-		if m_connection ~= nil then
-			m_connection, id, info, cover_path = mpd_main(base_id, m_connection)
-		else
-			m_connection, id, info, cover_path = mpd_main(base_id)
-		end
+		id, info, cover_path = mpd_main(base_id)
+
 		if id == nil then
 			return
 		end
