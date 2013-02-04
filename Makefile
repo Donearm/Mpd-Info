@@ -21,3 +21,7 @@ $(INFO):
 
 clean:
 	rm $(OBJ)
+
+install: $(OUT) $(SLEEP)
+	install -m755 mpdinfo.so /usr/lib/lua/5.2/
+	install -m755 sleep.so /usr/lib/lua/5.2/
