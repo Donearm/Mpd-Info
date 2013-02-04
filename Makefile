@@ -8,7 +8,7 @@ LDFLAGS = -llua -lmpdclient
 OBJ = $(wildcard *.o) $(wildcard *.so) mpdinfo sleep
 SRC = $(wildcard *.c)
 
-all: $(OUT) $(SLEEP)
+all: $(INFO) $(SLEEP)
 
 $(SLEEP):
 	$(CC) $(CFLAGS) -shared -fPIC -o $@.so -llua $@.c
