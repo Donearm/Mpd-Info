@@ -6,19 +6,19 @@ CFLAGS = -Wall -g -Wextra -O2
 LDFLAGS = -llua -lmpdclient
 
 OBJ = $(wildcard *.o) $(wildcard *.so) mpdinfo sleep
-SRC = $(wildcard *.c)
+SRC = $(wildcard *.c) $(wildcard *.h)
 
 all: $(INFO) $(SLEEP)
 
 .PHONY: clean install tags
 
-$(SLEEP):
+$(SLEEP): sleep.c
 	$(CC) $(CFLAGS) -shared -fPIC -o $@.so -llua $@.c
 
-tags: $(SRC)
-	ctags *.c *.h
+tags:
+	ctags $(SRC)
 
-$(INFO):
+$(INFO): mpdinfo.c
 	$(CC) $(CFLAGS) -shared -fPIC -o $@.so $(LDFLAGS) $@.c
 
 clean:
