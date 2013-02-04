@@ -40,8 +40,9 @@ int show_mpdinfo_c(lua_State *L)
 	/* if no status, try reconnecting */
 	if (!status)
 	{
-/*		printf("connection failed: %s\n", mpd_connection_get_error_message(connection)); */
-		lua_pushstring(L, mpd_connection_get_error_message(connection));
+		fprintf(stderr, "connection failed: %s\n", mpd_connection_get_error_message(connection));
+/*		lua_pushstring(L, mpd_connection_get_error_message(connection)); */
+		lua_pushboolean(L, 0);
 		return 1;
 	}
 
