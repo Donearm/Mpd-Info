@@ -60,7 +60,9 @@ but can be everywhere):
 	mpdtimer:add_signal("timeout", function () coverart_show() end)
 	mpdtimer:start()
 
-Then every 2 seconds awesome will take care of triggering the function 
+for Awesomewm >= 3.5, change `add_signal` with `connect_signal`
+
+After that, every 2 seconds awesome will take care of triggering the function 
 and check if the playing song in Mpd has changed; if it has, a nice 
 naughty notification will appear with cover art and album, artist and 
 song name. It will look for an album art in the song directory with a 
