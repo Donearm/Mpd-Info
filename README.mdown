@@ -74,6 +74,7 @@ one of these words in the name.
 Requirements
 ===========
 
+* [Libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
 * [LuaFileSystem](http://keplerproject.github.com/luafilesystem/)
 
 License
