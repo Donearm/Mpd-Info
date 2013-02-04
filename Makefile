@@ -10,6 +10,8 @@ SRC = $(wildcard *.c)
 
 all: $(INFO) $(SLEEP)
 
+.PHONY: clean install tags
+
 $(SLEEP):
 	$(CC) $(CFLAGS) -shared -fPIC -o $@.so -llua $@.c
 
@@ -22,6 +24,6 @@ $(INFO):
 clean:
 	rm $(OBJ)
 
-install: $(OUT) $(SLEEP)
+install: $(INFO) $(SLEEP)
 	install -m755 mpdinfo.so /usr/lib/lua/5.2/
 	install -m755 sleep.so /usr/lib/lua/5.2/
