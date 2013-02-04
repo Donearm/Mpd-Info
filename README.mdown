@@ -72,7 +72,7 @@ one of these words in the name.
 Requirements
 ===========
 
-* Lua-Mpd https://github.com/silentbicycle/lua-mpd
+* [LuaFileSystem](http://keplerproject.github.com/luafilesystem/)
 
 License
 =======
