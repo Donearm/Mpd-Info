@@ -2,7 +2,7 @@ INFO = mpdinfo
 SLEEP = sleep
 
 CC = gcc
-CFLAGS = -Wall -g -Wextra -O2
+CFLAGS = -W -Wall -g -Wextra -O2
 LDFLAGS = -llua -lmpdclient
 
 OBJ = $(wildcard *.o) $(wildcard *.so) mpdinfo sleep
