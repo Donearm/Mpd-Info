@@ -69,14 +69,6 @@ images_ext = { "jpg", "jpeg", "JPEG", "JPG", "PNG", "png", "bmp", "BMP" }
 -- table of possible patterns for the cover filename
 coverpatterns = { '.*[Ff]ront.*', '.*[Ff]older.*', '.*[Aa]lbumart.*', '.*[Cc]over.*', '.*[Tt]humb.*' }
 
-
---- Check if we have a successful connection with MPD server or
---otherwise exit.
-if not istate then
-	-- exit if no connection has been possible to the server
-	return
-end
-
 --- Main loop function.
 -- @param argid A numeric value corresponding to the Id of the song 
 -- played.
