@@ -21,13 +21,10 @@ add to awesomewm's rc.lua:
 	local coverart_on
 	local base_id = 0
 	function coverart_show()
-		local id
-		local info
-		local cover_path
 
 		coverart_hide()
 
-		id, info, cover_path = mpd_main(base_id)
+		local id, info, cover_path = mpd_main(base_id)
 
 		if id == nil then
 			return
@@ -60,7 +57,8 @@ but can be everywhere):
 	mpdtimer:add_signal("timeout", function () coverart_show() end)
 	mpdtimer:start()
 
-for Awesomewm >= 3.5, change `add_signal` with `connect_signal`
+for Awesomewm >= 3.5, change `add_signal` with `connect_signal` and use simply
+`local img = cover_path` (without image())
 
 After that, every 2 seconds awesome will take care of triggering the function 
 and check if the playing song in Mpd has changed; if it has, a nice 
