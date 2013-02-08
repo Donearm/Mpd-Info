@@ -44,6 +44,7 @@ int show_mpdinfo_c(lua_State *L)
 /*		lua_pushstring(L, mpd_connection_get_error_message(connection)); */
 		lua_pushboolean(L, 0);
 		return 1;
+		mpd_connection_free(connection);
 	}
 
 	/* get play state */
@@ -107,6 +108,7 @@ int show_mpdinfo_c(lua_State *L)
 		lua_pushstring(L, state);
 		return 1;
 	}
+	mpd_connection_free(connection);
 }
 
 int luaopen_mpdinfo(lua_State *L)
