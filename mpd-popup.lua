@@ -5,19 +5,22 @@
 -- @author Gianluca Fiore
 -- @copyright 2011-2013, Gianluca Fiore <forod.g@gmail.com>
 --
--- Requires lua-mpd (https://github.com/silentbicycle/lua-mpd)
--- and Lua FileSystem 
+-- Requires Lua FileSystem
 -- (http://keplerproject.github.com/luafilesystem/index.html)
 
-local mpd = require("mpd")
+
 local lfs = require("lfs")
+local mpdinfo = require("mpdinfo")
+local lsleep = require("sleep")
 
-
---- Connect/Reconnect function to the mpd server.
-function connection()
-	local m = mpd.connect()
-	if m then return m end
+--- Sleep function
+--@param n number of seconds to sleep
+function secsleep(n)
+	if n > 0 then
+		sleep(n)
+	end
 end
+
 
 --- Get path of the mpd music directory.
 function mpd_directory()
@@ -69,42 +72,28 @@ coverpatterns = { '.*[Ff]ront.*', '.*[Ff]older.*', '.*[Aa]lbumart.*', '.*[Cc]ove
 --- Main loop function.
 -- @param argid A numeric value corresponding to the Id of the song 
 -- played.
--- @param m_connection A previous connection to the mpd server.
-function mpd_main(argid, m_connection)
-	if m_connection then
-		local m = m_connection
-	else
-		while m == nil do
-			-- keep trying to connect to mpd until a connection is made
-			m = connection()
-		end
-	end
-	state = m:status()['state']
-	id = m:currentsong()['Id']
+function mpd_main(argid)
 	last_id = argid or arg[1]
+
 	if last_id == nil then
 		-- last_id may be nil at first call from awesomewm, make it 0 
 		-- then because nil can't be indexed
 		last_id = 0
 	end
+	-- load status info with mpdinfo c module
+	local state, artist, album, title, id, file = showmpdinfo() 
+
 	if id ~= last_id then
-		if state == "play" then
-			artist = m:currentsong()['Artist']
-			album = m:currentsong()['Album']
-			title = m:currentsong()['Title']
-			file = m:currentsong()['file']
+		if state == "playing" then
 			cover = coversearch(file, album)
 			np_string = string.format("Now Playing \nArtist:\t%s\nAlbum:\t%s\nSong:\t%s\n", artist, album, title)
-			return m, id, np_string, cover
-		elseif state == "pause" then
-			artist = m:currentsong()['Artist']
-			album = m:currentsong()['Album']
-			title = m:currentsong()['Title']
-			return m, id
+			return id, np_string, cover
+		elseif state == "paused" then
+			return id
 		else
-			return m, id
+			return id
 		end
 	else
-		return m, id
+		return id
 	end
 end

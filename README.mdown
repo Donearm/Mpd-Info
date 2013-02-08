@@ -20,19 +20,12 @@ add to awesomewm's rc.lua:
 
 	local coverart_on
 	local base_id = 0
-	local m_connection
 	function coverart_show()
-		local id
-		local info
-		local cover_path
 
 		coverart_hide()
 
-		if m_connection ~= nil then
-			m_connection, id, info, cover_path = mpd_main(base_id, m_connection)
-		else
-			m_connection, id, info, cover_path = mpd_main(base_id)
-		end
+		local id, info, cover_path = mpd_main(base_id)
+
 		if id == nil then
 			return
 		end
@@ -47,7 +40,7 @@ add to awesomewm's rc.lua:
 				timeout = 3,
 				position = "bottom_right",
 			})
-		base_id =d
+		base_id = id
 		end
 	end
 	
@@ -64,7 +57,10 @@ but can be everywhere):
 	mpdtimer:add_signal("timeout", function () coverart_show() end)
 	mpdtimer:start()
 
-Then every 2 seconds awesome will take care of triggering the function 
+for Awesomewm >= 3.5, change `add_signal` with `connect_signal` and use simply
+`local img = cover_path` (without image())
+
+After that, every 2 seconds awesome will take care of triggering the function 
 and check if the playing song in Mpd has changed; if it has, a nice 
 naughty notification will appear with cover art and album, artist and 
 song name. It will look for an album art in the song directory with a 
@@ -76,7 +72,8 @@ one of these words in the name.
 Requirements
 ===========
 
-* Lua-Mpd https://github.com/silentbicycle/lua-mpd
+* [Libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
+* [LuaFileSystem](http://keplerproject.github.com/luafilesystem/)
 
 License
 =======
