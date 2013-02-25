@@ -13,13 +13,13 @@ all: $(INFO) $(SLEEP)
 .PHONY: clean install tags
 
 $(SLEEP): sleep.c
-	$(CC) $(CFLAGS) -shared -fPIC -o $@.so -llua $@.c
+	$(CC) $(CFLAGS) -shared -fPIC -o $@.so -llua $@.c `pkg-config --cflags --libs lua` -DPROGNAME="\"sleep\"" -DVERSION="\"0.1\"" -DDATE="\"`date -u`\""
 
 tags:
 	ctags $(SRC)
 
 $(INFO): mpdinfo.c
-	$(CC) $(CFLAGS) -shared -fPIC -o $@.so $(LDFLAGS) $@.c
+	$(CC) $(CFLAGS) -shared -fPIC -o $@.so $(LDFLAGS) $@.c `pkg-config --cflags --libs libmpdclient lua` -DPROGNAME="\"mpdinfo\"" -DVERSION="\"0.1\"" -DDATE="\"`date -u`\""
 
 clean:
 	rm $(OBJ)
