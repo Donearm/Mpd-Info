@@ -23,7 +23,7 @@ $(INFO): mpdinfo.c
 	$(CC) $(CFLAGS) -shared -fPIC -o $@.so $(LDFLAGS) $@.c `pkg-config --cflags --libs libmpdclient lua` -DPROGNAME="\"mpdinfo\"" -DVERSION="\"0.1\"" -DDATE="\"`date -u`\""
 
 $(XMMS): xmmsinfo.c
-	$(CC) $(CFLAGS) -o $@ $< `pkg-config --cflags --libs xmms2-client-glib xmms2-client glib-2.0 lua`
+	$(CC) $(CFLAGS) -shared -fPIC -o $@.so $< `pkg-config --cflags --libs xmms2-client-glib xmms2-client glib-2.0 lua` -DPROGNAME="\"xmmsinfo\"" -DVERSION="\"0.1\"" -DDATE="\"`date -u`\""
 
 clean:
 	rm $(OBJ)
