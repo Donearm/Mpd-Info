@@ -43,8 +43,8 @@ int show_mpdinfo_c(lua_State *L)
 		fprintf(stderr, "connection failed: %s\n", mpd_connection_get_error_message(connection));
 /*		lua_pushstring(L, mpd_connection_get_error_message(connection)); */
 		lua_pushboolean(L, 0);
-		return 1;
 		mpd_connection_free(connection);
+		return 1;
 	}
 
 	/* get play state */
