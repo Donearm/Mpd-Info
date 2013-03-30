@@ -1,7 +1,10 @@
 #include <stdlib.h>
 #include <xmmsclient/xmmsclient.h>
+#include <lua.h>
 
-void get_mediainfo(xmmsc_connection_t *connection, int id)
+lua_State* L;
+
+void get_mediainfo(xmmsc_connection_t *connection, int id, lua_State *L)
 {
 	xmmsc_result_t *result;
 	xmmsv_t *return_value;
@@ -10,7 +13,6 @@ void get_mediainfo(xmmsc_connection_t *connection, int id)
 	xmmsv_t *dict_entry;
 	xmmsv_t *infos;
 	const char *val;
-	int intval;
 
 	result = xmmsc_medialib_get_info(connection, id);
 	xmmsc_result_wait(result);
@@ -21,6 +23,8 @@ void get_mediainfo(xmmsc_connection_t *connection, int id)
 				err_buf);
 		exit(EXIT_FAILURE);
 	}
+
+	printf("Id = %d\n", id);
 
 	infos = xmmsv_propdict_to_dict(return_value, NULL);
 	if(!xmmsv_dict_get(infos, "artist", &dict_entry) ||
@@ -44,6 +48,13 @@ void get_mediainfo(xmmsc_connection_t *connection, int id)
 
 	printf("Album = %s\n", val);
 
+	if(!xmmsv_dict_get(infos, "url", &dict_entry) ||
+			!xmmsv_get_string(dict_entry, &val)) {
+		val = NULL;
+	}
+
+	printf("Uri = %s\n", val);
+
 	xmmsv_unref(infos);
 	xmmsc_result_unref(result);
 }
@@ -55,8 +66,11 @@ int main (int argc, char **argv)
 
 	xmmsc_connection_t *connection;
 	xmmsc_result_t *result;
+	xmmsc_result_t *state;
 	xmmsv_t *return_value;
+	xmmsv_t *state_value;
 	const char *err_buf;
+	int32_t status;
 
 	/* variables that we'll need later */
 	xmmsv_list_iter_t *it;
@@ -75,6 +89,41 @@ int main (int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
+	// get current xmms2 status
+	state = xmmsc_playback_status(connection);
+	xmmsc_result_wait(state);
+	state_value = xmmsc_result_get_value(state);
+
+	if(xmmsv_get_error(state_value, &err_buf)) {
+		fprintf(stderr, "Error while asking for the connection status, %s\n",
+				err_buf);
+	}
+
+	if(!xmmsv_get_int(state_value, &status)) {
+		fprintf(stderr, "Couldn't get connection status, %d\n", status);
+	}
+
+	// 0 == stopped; 1 == playing; 2 == paused
+	if(status == XMMS_PLAYBACK_STATUS_PLAY) {
+		printf("Status is playing, %d\n", status);
+	} else if (status == XMMS_PLAYBACK_STATUS_PAUSE) {
+		printf("Status is paused, %d\n", status);
+	} else {
+		printf("Status is stopped, %d\n", status);
+	}
+
+	// get current position in the playlist
+	xmmsc_result_t *current_pos;
+	xmmsv_t *current_pos_value;
+	int32_t cur_pos;
+
+	current_pos = xmmsc_playlist_current_pos(connection, XMMS_ACTIVE_PLAYLIST);
+	xmmsc_result_wait(current_pos);
+	current_pos_value = xmmsc_result_get_value(current_pos);
+	xmmsv_get_int(current_pos_value, &cur_pos);
+
+	printf("Current position is, %d\n", cur_pos);
+
 	// ask for the playlist
 	result = xmmsc_playlist_list_entries(connection, NULL);
 	xmmsc_result_wait(result);
@@ -85,6 +134,7 @@ int main (int argc, char **argv)
 				err_buf);
 		exit(EXIT_FAILURE);
 	}
+
 
 	// extract the iterator over the list
 	if(!xmmsv_get_list_iter(return_value, &it)) {
@@ -108,7 +158,7 @@ int main (int argc, char **argv)
 			exit(EXIT_FAILURE);
 		}
 
-		get_mediainfo(connection, id);
+		get_mediainfo(connection, id, L);
 	}
 
 	xmmsc_result_unref(result);
