@@ -4,6 +4,15 @@
 
 lua_State* L;
 
+struct Info {
+	const char *state;
+	const char *artist;
+	const char *album;
+	const char *song;
+	int32_t id;
+	const char *uri;
+};
+
 int show_xmmsinfo_c(lua_State *L)
 {
 	xmmsc_connection_t *connection;
@@ -14,6 +23,9 @@ int show_xmmsinfo_c(lua_State *L)
 
 	// string containing the current xmms2 state
 	char *state_str;
+
+	// initialize the Info struct
+	struct Info i;
 
 	// initialize the connection
 	connection = xmmsc_init("xmmsinfo");
@@ -55,8 +67,7 @@ int show_xmmsinfo_c(lua_State *L)
 		state_str = "stopped";
 	}
 
-	// push state_str to lua
-	lua_pushstring(L, state_str);
+	i.state = state_str;
 
 	// get current position in the playlist
 	xmmsc_result_t *current_id;
@@ -95,7 +106,7 @@ int show_xmmsinfo_c(lua_State *L)
 		val = "No Artist";
 	}
 
-	lua_pushstring(L, val);
+	i.artist = val;
 	printf("Artist = %s\n", val);
 
 	if(!xmmsv_dict_get(infos, "album", &dict_entry) ||
@@ -103,7 +114,7 @@ int show_xmmsinfo_c(lua_State *L)
 		val = "No Album";
 	}
 
-	lua_pushstring(L, val);
+	i.album = val;
 	printf("Album = %s\n", val);
 
 	if(!xmmsv_dict_get(infos, "title", &dict_entry) ||
@@ -111,10 +122,10 @@ int show_xmmsinfo_c(lua_State *L)
 		val = "No Title";
 	}
 
-	lua_pushstring(L, val);
+	i.song = val;
 	printf("Title = %s\n", val);
 
-	lua_pushinteger(L, cur_id);
+	i.id = cur_id;
 	printf("Id = %d\n", cur_id);
 
 	if(!xmmsv_dict_get(infos, "url", &dict_entry) ||
@@ -122,8 +133,17 @@ int show_xmmsinfo_c(lua_State *L)
 		val = NULL;
 	}
 
-	lua_pushstring(L, val);
+	i.uri = val;
 	printf("Uri = %s\n", val);
+
+	// push everything to lua
+	lua_pushstring(L, i.state);
+	lua_pushstring(L, i.artist);
+	lua_pushstring(L, i.album);
+	lua_pushstring(L, i.song);
+	lua_pushinteger(L, i.id);
+	lua_pushstring(L, i.uri);
+
 
 	// clean up
 	xmmsv_unref(infos);
