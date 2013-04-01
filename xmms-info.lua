@@ -71,7 +71,7 @@ images_ext = { "jpg", "jpeg", "JPEG", "JPG", "PNG", "png", "bmp", "BMP" }
 coverpatterns = { '.*[Ff]ront.*', '.*[Ff]older.*', '.*[Aa]lbumart.*', '.*[Cc]over.*', '.*[Tt]humb.*' }
 
 
--- load initial status info with mpdinfo c module
+-- load initial status info with xmmsinfo c module
 local istate, iartist, ialbum, ititle, iid, ifile = showxmmsinfo() 
 print(istate, iartist)
 
