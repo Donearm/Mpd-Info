@@ -69,11 +69,20 @@ finally, "thumb" (in this order). The first that matches will be the one
 shown. If you don't see anything, be sure to have an image containing 
 one of these words in the name.
 
+Xmms2 support
+=============
+
+Despite the name, there's optional support for Xmms2 daemon too. Instructions 
+are like for MPD, only you need to use xmms-popup.lua file and build xmmsinfo.c. 
+Substitute all "mpd" occurrences in rc.lua as shown above with "xmms", 
+obviously.
+
 Requirements
 ===========
 
-* [Libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/)
+* [Libmpdclient](http://sourceforge.net/projects/musicpd/files/libmpdclient/) (for MPD)
 * [LuaFileSystem](http://keplerproject.github.com/luafilesystem/)
+* [Xmms2](https://xmms2.org/wiki/Main_Page) (for Xmms2)
 
 License
 =======
