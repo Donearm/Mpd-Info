@@ -57,13 +57,10 @@ int show_xmmsinfo_c(lua_State *L)
 
 	// 0 == stopped; 1 == playing; 2 == paused
 	if(status == XMMS_PLAYBACK_STATUS_PLAY) {
-		printf("Status is playing, %d\n", status);
 		state_str = "playing";
 	} else if (status == XMMS_PLAYBACK_STATUS_PAUSE) {
-		printf("Status is paused, %d\n", status);
 		state_str = "paused";
 	} else {
-		printf("Status is stopped, %d\n", status);
 		state_str = "stopped";
 	}
 
@@ -79,13 +76,11 @@ int show_xmmsinfo_c(lua_State *L)
 	current_id_value = xmmsc_result_get_value(current_id);
 	xmmsv_get_int(current_id_value, &cur_id);
 
-	printf("Current song id is, %d\n", cur_id);
 
 
 	// initialize variables for the song info
 	xmmsc_result_t *result;
 	xmmsv_t *return_value;
-	//const char *err_buf;
 	xmmsv_t *dict_entry;
 	xmmsv_t *infos;
 	const char *val;
@@ -107,7 +102,6 @@ int show_xmmsinfo_c(lua_State *L)
 	}
 
 	i.artist = val;
-	printf("Artist = %s\n", val);
 
 	if(!xmmsv_dict_get(infos, "album", &dict_entry) ||
 			!xmmsv_get_string(dict_entry, &val)) {
@@ -115,7 +109,6 @@ int show_xmmsinfo_c(lua_State *L)
 	}
 
 	i.album = val;
-	printf("Album = %s\n", val);
 
 	if(!xmmsv_dict_get(infos, "title", &dict_entry) ||
 			!xmmsv_get_string(dict_entry, &val)) {
@@ -123,10 +116,8 @@ int show_xmmsinfo_c(lua_State *L)
 	}
 
 	i.song = val;
-	printf("Title = %s\n", val);
 
 	i.id = cur_id;
-	printf("Id = %d\n", cur_id);
 
 	if(!xmmsv_dict_get(infos, "url", &dict_entry) ||
 			!xmmsv_get_string(dict_entry, &val)) {
@@ -134,7 +125,6 @@ int show_xmmsinfo_c(lua_State *L)
 	}
 
 	i.uri = val;
-	printf("Uri = %s\n", val);
 
 	// push everything to lua
 	lua_pushstring(L, i.state);
@@ -151,7 +141,7 @@ int show_xmmsinfo_c(lua_State *L)
 	xmmsc_result_unref(state);
 	xmmsc_result_unref(current_id);
 	xmmsc_unref(connection);
-	return(EXIT_SUCCESS);
+	return 6;
 }
 
 
