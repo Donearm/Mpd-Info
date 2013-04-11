@@ -21,29 +21,14 @@ function secsleep(n)
 	end
 end
 
-
---- Get path of the mpd music directory.
-function mpd_directory()
-	local f = '/etc/mpd.conf'
-	local file = io.input(f)
-
-	for lines in file:lines() do
-		local mpd_dir = string.match(lines, '^music_directory.-%"(.-)%"$')
-		if mpd_dir then
-			return mpd_dir
-		end
-	end
-end
-
 --- Find the path to the cover album image of the current playing song.
 -- @param file The path of the song currently being played.
--- @param album The name of the album.
-function coversearch(file, album)
-	local dir = string.gsub(file, '(.*)/.*', "%1")
-	local mpd_dir = mpd_directory()
-	for files in lfs.dir(mpd_dir .. '/' .. dir) do
+function coversearch(file)
+	local fdir = string.gsub(file, '(.*/)(.*)', "%1")
+	local dir = string.gsub(fdir, 'file://', '') -- remove "file://"
+	for files in lfs.dir(dir) do
 		if files ~= "." and files ~= ".." then
-			local f = mpd_dir .. '/' .. dir .. '/' .. files
+			local f = dir .. '/' .. files
 			attr = lfs.attributes(f)
 			if attr.mode ~= "directory" then
 				-- get file extension only (without the dot)
@@ -70,10 +55,8 @@ images_ext = { "jpg", "jpeg", "JPEG", "JPG", "PNG", "png", "bmp", "BMP" }
 -- table of possible patterns for the cover filename
 coverpatterns = { '.*[Ff]ront.*', '.*[Ff]older.*', '.*[Aa]lbumart.*', '.*[Cc]over.*', '.*[Tt]humb.*' }
 
-
 -- load initial status info with xmmsinfo c module
 local istate, iartist, ialbum, ititle, iid, ifile = showxmmsinfo() 
-print(istate, iartist)
 
 --- Check if we have a successful connection with XMMS2 server or
 --otherwise exit.
@@ -87,7 +70,7 @@ while true do
 	local state, artist, album, title, id, file = showxmmsinfo()
 	if state ~= istate then
 		if state == "playing" then
-			cover = coversearch(file, album)
+			cover = coversearch(file)
 			np_string = string.format("Now Playing \nArtist:\t%s\nAlbum:\t%s\nSong:\t%s\n", artist, album, title)
 			print(np_string)
 		elseif state == "paused" then
@@ -95,13 +78,13 @@ while true do
 		else
 			print("No song playing")
 		end
-		istate = showmpdinfo()
+		istate = showxmmsinfo()
 	end
 
 	if id ~= iid and state ~= "stopped" then
 		iid = id
 		print("Song changed")
-		cover = coversearch(file, album)
+		cover = coversearch(file)
 		np_string = string.format("Now Playing \nArtist:\t%s\nAlbum:\t%s\nSong:\t%s\n", artist, album, title)
 		print(np_string)
 	end
