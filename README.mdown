@@ -13,8 +13,9 @@ in a popup.
 
 **How to use it**
 
-Copy mpd-popup.lua in ~/.config/awesome/ or anywhere in Lua's path. Then 
-add to awesomewm's rc.lua:
+Copy mpd-popup.lua in ~/.config/awesome/ or anywhere in Lua's path. Use `sudo 
+make install` from this repo's Makefile to install the c libraries in Lua's path 
+(by default for Lua 5.2). Then add to awesomewm's rc.lua:
 
 	require("mpd-popup")
 
