@@ -28,7 +28,7 @@ function coversearch(file)
 	local dir = string.gsub(fdir, 'file://', '') -- remove "file://"
 	for files in lfs.dir(dir) do
 		if files ~= "." and files ~= ".." then
-			local f = dir .. '/' .. files
+			local f = dir .. files
 			attr = lfs.attributes(f)
 			if attr.mode ~= "directory" then
 				-- get file extension only (without the dot)
