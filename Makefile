@@ -11,7 +11,7 @@ SRC = $(wildcard *.c) $(wildcard *.h)
 
 all: $(INFO) $(SLEEP) $(XMMS)
 
-.PHONY: clean install tags
+.PHONY: clean install uninstall tags
 
 $(SLEEP): sleep.c
 	$(CC) $(CFLAGS) -shared -fPIC -o $@.so -llua $@.c `pkg-config --cflags --libs lua` -DPROGNAME="\"sleep\"" -DVERSION="\"0.1\"" -DDATE="\"`date -u`\""
@@ -31,4 +31,9 @@ clean:
 install: $(INFO) $(SLEEP) $(XMMS)
 	install -m755 mpdinfo.so /usr/lib/lua/5.2/
 	install -m755 sleep.so /usr/lib/lua/5.2/
-	install -m755 xmmsinfo /usr/lib/lua/5.2/
+	install -m755 xmmsinfo.so /usr/lib/lua/5.2/
+
+uninstall:
+	rm -f /usr/lib/lua/5.2/mpdinfo.so
+	rm -f /usr/lib/lua/5.2/sleep.so
+	rm -f /usr/lib/lua/5.2/xmmsinfo.so
