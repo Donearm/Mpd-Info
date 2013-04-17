@@ -27,7 +27,9 @@ end
 -- @param file The path of the song currently being played.
 function coversearch(file)
 	local fdir = string.gsub(file, '(.*/)(.*)', "%1")
-	local dir = string.gsub(fdir, 'file://', '') -- remove "file://"
+	local sdir = string.gsub(fdir, '+', ' ') -- substitute '+' coming 
+									-- from xmms2 api with whitespaces
+	local dir = string.gsub(sdir, 'file://', '') -- remove "file://"
 	for files in lfs.dir(dir) do
 		if files ~= "." and files ~= ".." then
 			local f = dir .. '/' .. files
