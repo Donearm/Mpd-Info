@@ -21,14 +21,18 @@ function secsleep(n)
 	end
 end
 
+--- Escape characters in a string
+--@param s the string containing characters to be escaped
+function escape(s)
+	return (s:gsub("[%-%.%+%[%]%(%)%$%^%%%?%*%']", '%%%1'):gsub('%z', '%%z'))
+end
 
 
 --- Find the path to the cover album image of the current playing song.
 -- @param file The path of the song currently being played.
 function coversearch(file)
 	local fdir = string.gsub(file, '(.*/)(.*)', "%1")
-	local sdir = string.gsub(fdir, '+', ' ') -- substitute '+' coming 
-									-- from xmms2 api with whitespaces
+	local sdir = escape(fdir)
 	local dir = string.gsub(sdir, 'file://', '') -- remove "file://"
 	for files in lfs.dir(dir) do
 		if files ~= "." and files ~= ".." then
