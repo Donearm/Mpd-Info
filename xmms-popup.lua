@@ -27,6 +27,15 @@ function escape(s)
 	return (s:gsub("[%-%.%+%[%]%(%)%$%^%%%?%*%']", '%%%1'):gsub('%z', '%%z'))
 end
 
+--- Decode url-encoded strings
+--@param s the string to be decoded
+function url_decode(s)
+	s = string.gsub (s, "+", " ")
+	s = string.gsub (s, "%%(%x%x)",
+		function(h) return string.char(tonumber(h,16)) end)
+	s = string.gsub (s, "\r\n", "\n")
+	return s
+end
 
 --- Find the path to the cover album image of the current playing song.
 -- @param file The path of the song currently being played.
@@ -34,6 +43,7 @@ function coversearch(file)
 	local fdir = string.gsub(file, '(.*/)(.*)', "%1")
 	local sdir = escape(fdir)
 	local dir = string.gsub(sdir, 'file://', '') -- remove "file://"
+	dir = url_decode(dir)
 	for files in lfs.dir(dir) do
 		if files ~= "." and files ~= ".." then
 			local f = dir .. '/' .. files
