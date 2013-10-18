@@ -34,6 +34,7 @@ function url_decode(s)
 	s = string.gsub (s, "%%(%x%x)",
 		function(h) return string.char(tonumber(h,16)) end)
 	s = string.gsub (s, "\r\n", "\n")
+	s = string.gsub (s, '%%', '')
 	return s
 end
 
