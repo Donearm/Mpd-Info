@@ -3,7 +3,7 @@
 --- Popup with info about current playing song in xmms2.
 -- To be loaded from awesomeWM's rc.lua
 -- @author Gianluca Fiore
--- @copyright 2011-2013, Gianluca Fiore <forod.g@gmail.com>
+-- @copyright 2011-2015, Gianluca Fiore <forod.g@gmail.com>
 --
 -- Requires Lua FileSystem
 -- (http://keplerproject.github.com/luafilesystem/index.html)
