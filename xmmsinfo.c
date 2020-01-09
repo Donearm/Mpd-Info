@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <xmmsclient/xmmsclient.h>
 #include <lua.h>
 
