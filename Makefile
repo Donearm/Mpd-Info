@@ -4,7 +4,7 @@ XMMS = xmmsinfo
 
 CC = gcc
 CFLAGS = -W -Wall -g -Wextra -O2
-LDFLAGS = -llua -lmpdclient
+LDFLAGS = -llua5.3 -lmpdclient
 
 OBJ = $(wildcard *.o) $(wildcard *.so) mpdinfo sleep xmmsinfo
 SRC = $(wildcard *.c) $(wildcard *.h)
